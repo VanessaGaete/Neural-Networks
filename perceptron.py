@@ -70,5 +70,3 @@ class SummingGate:
         result=NAND.output(n2,n3)
 
         return result,carry
-
-SummingGate(1,1).output()
