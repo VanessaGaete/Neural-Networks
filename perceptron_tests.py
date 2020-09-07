@@ -26,3 +26,6 @@ class TestPerceptron(unittest.TestCase):
     self.assertAlmostEqual(SummingGate(0,0).output(), 0,0)
     self.assertAlmostEqual(SummingGate(0,1).output(), 1,0)
     self.assertAlmostEqual(SummingGate(1,0).output(), 1,0)
+    
+if __name__ == "__main__":
+   unittest.main()
