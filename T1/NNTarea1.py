@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import csv
+import pandas as pd
 
 def sigmoid(z):
   return 1/(1 + np.exp(-z))
@@ -222,59 +223,85 @@ input_data = np.array([])
 output_data = np.array([], dtype=int)
 
 # Reading csv
-with open("6-star.csv") as csv_file:
-  csv_reader = csv.reader(csv_file, delimiter=',')
-  firstLine = True
-  for row in csv_reader:
-    if firstLine:  ## first row
-      firstLine = False
-    else:
-      # We have the minimum and maximum values ​​pre-calculated
-      # The elements of the row are normalized and inserted into the input array
-      input_data = np.append(input_data, np.array([
-          normalization(float(row[0]), 1939, 40000, 1, 0),
-          normalization(float(row[1]), 0.00008, 849420, 1, 0),
-          normalization(float(row[2]), 0.0084, 1948.5, 1, 0),
-          normalization(float(row[3]), -11.92, 20.06, 1, 0),
-          normalization(float(color_encoding[row[5]]), 0, 10, 1, 0),
-          normalization(float(spectral_class_encoding[row[6]]), 0, 6, 1, 0)],
-        dtype=float))
 
-      # The encoding is applied to the element in the fifth position of the row 
-      # and added to the output array
-      output_data = np.append(output_data, np.array([encoding[int(row[4])]]))
+data = pd.read_csv("6-star.csv", sep=",")
+
+#the data is disordered so that later we can extract random data in the tests and training
+data=data.iloc[np.random.permutation(len(data))].reset_index(drop=True)
+
+#the input and output arrays are made from the dataset
+input=np.ones((6,240), dtype=float)
+output_data=np.zeros((1,240),dtype=int)
+
+for i in range(240):
+  input[0][i]=normalization(float(data['Temperature (K)'][i]), 1939, 40000, 1, 0)
+  input[1][i]=normalization(float(data['Luminosity(L/Lo)'][i]), 0.00008, 849420, 1, 0)
+  input[2][i]=normalization(float(data['Radius(R/Ro)'][i]), 0.0084, 1948.5, 1, 0)
+  input[3][i]=normalization(float(data['Absolute magnitude(Mv)'][i]), -11.92, 20.06, 1, 0)
+  input[4][i]=normalization(float(color_encoding[data['Star color'][i]]), 0, 10, 1, 0)
+  input[5][i]=normalization(float(spectral_class_encoding[data['Spectral Class'][i]]), 0, 6, 1, 0)
+
+  output_data[0][i] = int(data['Star type'][i])
+
+
+#We will train the network with 80% of the data and test with the other 20%
+train_number = int(0.8*240)
+test_number = int(0.2*240)
+
+train_input=np.zeros((6,train_number), dtype=float)
+test_input=np.zeros((6,test_number), dtype=float)
+
+test_output = np.array([], dtype=int)
+train_output = np.array([], dtype=int)
+
+#The examples are separated into different matrices for testing and training
+for i in range(240):
+  if i < train_number:
+    for j in range(6):
+      train_input[j][i] =input[j][i]
+    train_output = np.append(train_output, np.array([encoding[output_data[0][i]]]))
+
+  else:
+    for j in range(6):
+      test_input[j][i-train_number] = input[j][i]
+    test_output = np.append(test_output, np.array([encoding[output_data[0][i]]]))
 
 # We must to re-order the data
-input_data = input_data.reshape(240, 6)
-output_data = output_data.reshape(240, 6)
+train_output = train_output.reshape(train_number, 6)
+test_output = test_output.reshape(test_number, 6)
+
 
 # Define a model
-X = input_data.T
-Y = output_data.T
+train_X = train_input
+train_Y = train_output.T
 n_x = 6
 n_h = 6
 n_y = 6
-m = X.shape[1]
+m = train_X.shape[1]
 number_of_iterations = 10000
 learning_rate = 0.5
 
+test_X = test_input
+test_Y = test_output
+
+
 # Training our neural network
-trained_parameters = model(X, Y, n_x, n_h, n_y, number_of_iterations, learning_rate)
+trained_parameters = model(train_X, train_Y, n_x, n_h, n_y, number_of_iterations, learning_rate)
 
 # Init confusion matrix with zeros, we have 6 classes to predict.
 confusion_matrix=np.zeros((6,6))
 
-# For each example the predictions are obtained, we store the results in the confusion matrix
-for i, starIndex in enumerate(range(240)):
-  expectedValue = predict(np.array([
-      [X[0][starIndex]],
-      [X[1][starIndex]],
-      [X[2][starIndex]],
-      [X[3][starIndex]],
-      [X[4][starIndex]],
-      [X[5][starIndex]],
+# For each example of the test data the predictions are obtained, we store the results in the confusion matrix
+for i, starIndex in enumerate(range(test_number)):
+  predictedValue = predict(np.array([
+      [test_X[0][starIndex]],
+      [test_X[1][starIndex]],
+      [test_X[2][starIndex]],
+      [test_X[3][starIndex]],
+      [test_X[4][starIndex]],
+      [test_X[5][starIndex]],
     ]), trained_parameters)
-  predictedValue = int(np.where(output_data[starIndex] == 1)[0])
+  expectedValue = int(np.where(test_Y[starIndex] == 1)[0])
   confusion_matrix[predictedValue][expectedValue] += 1
 
 def precision(label):
