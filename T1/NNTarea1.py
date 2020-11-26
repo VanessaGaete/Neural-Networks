@@ -332,7 +332,7 @@ for label in range(6):
 
 ##### CHART: COST vs ITERATIONS
 plt.plot(ITERATIONS, COSTS, color="blue")
-plt.title("Error measurement predicting a star")
+plt.title("Error measurement predicting a star. (6 neurons in hidden layer)")
 plt.ylabel("MSE (Mean Squared Error)")
 plt.xlabel("Number of Iterations")
 plt.show()
