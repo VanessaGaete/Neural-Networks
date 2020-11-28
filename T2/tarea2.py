@@ -310,6 +310,8 @@ def N_QUEEN_FITNESS(individual, solution, kwargs):
 #GENES_NUMBER = int(math.log(SOLUTION,2)) + 1
 #SCORE_FUNCTION = BINARY_FITNESS
 
+####
+
 SOLUTION = 4 # N QUEENS
 DIMENSION = 4
 GENES_CHOICES = list(range(DIMENSION))
@@ -365,3 +367,50 @@ plt.grid()
 
 plt.show()
 plt.close()
+
+#####GRAFICO PARA POBLACION
+
+def report(SOLUTION, DIMENSION, GENES_CHOICES, GENES_NUMBER,SCORE_FUNCTION,POPULATION_NUMBER, MUTATION_RATE, NUMBER_OF_GENERATIONS):
+
+    ga = GA(population_number=POPULATION_NUMBER,
+            genes_choices=GENES_CHOICES,
+            solution=SOLUTION,
+            genes_number=GENES_NUMBER,
+            scoreCalculatorFunction=SCORE_FUNCTION,
+            mutation_rate=MUTATION_RATE,
+            dimension=DIMENSION)
+
+    for i in range(NUMBER_OF_GENERATIONS):
+        ga.step()
+
+    print(ga.history)
+    ga.showSolution()
+
+
+    # CHART: TOTAL SCORE OF EVERY GENERATION
+    GENERATIONS = []
+    TOTAL_SCORES = []
+    ACIERTOS=[]
+    for i in ga.history:
+        GENERATIONS.append(i[0])
+        TOTAL_SCORES.append(i[1])
+        ACIERTOS.append(i[2])
+        
+    print("Solution found after:", ga.sol_gen, "generations\n")
+
+    plt.subplot(1,2,1)
+    plt.title("Score por generación")
+    plt.ylabel("% Score total poblacional")
+    plt.xlabel("# Generación")
+    plt.plot(GENERATIONS, TOTAL_SCORES, color="blue", label="Total Score")
+    plt.grid()
+
+    plt.subplot(1,2,2)
+    plt.title("Aciertos por generación")
+    plt.ylabel("# Aciertos")
+    plt.xlabel("# Generación")
+    plt.plot(GENERATIONS, ACIERTOS, color="green", label="Total Successes")
+    plt.grid()
+
+    plt.show()
+    plt.close()
