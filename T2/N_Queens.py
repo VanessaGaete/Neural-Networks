@@ -1,6 +1,6 @@
 import numpy as np
 
-from GeneticAlgorithm import AbstractIndividual
+from GeneticAlgorithm import AbstractIndividual, report
 import ReportUtils
 
 class Board(object):
@@ -154,71 +154,70 @@ NUMBER_OF_GENERATIONS = 100
 
 ###########################################ESTUDIO DE HIPERPARAMETROS#########################################
 
-ReportUtils.main(SOLUTION, GENES_CHOICES, GENES_NUMBER, SCORE_FUNCTION, POPULATION_NUMBER, MUTATION_RATE, NUMBER_OF_GENERATIONS, OPTIONS)
+# Probar el algoritmo con los parámetros dados / 1 reporte
+report(SOLUTION, GENES_CHOICES, GENES_NUMBER, SCORE_FUNCTION, POPULATION_NUMBER, MUTATION_RATE, NUMBER_OF_GENERATIONS, OPTIONS)
+
+# Probar el algoritmo con los parámetros dados y combinaciones de otros / 7 reportes + gráficos
+# ReportUtils.main(SOLUTION, GENES_CHOICES, GENES_NUMBER, SCORE_FUNCTION, POPULATION_NUMBER, MUTATION_RATE, NUMBER_OF_GENERATIONS, OPTIONS)
 
 ###########################################ESTUDIO DE DISTINTOS VALORES PARA EL PROBLEMA#########################################
-SOLUTION = 8 # N queens
-DIMENSION = 8 # MxM board
-GENES_CHOICES = list(range(DIMENSION)) # [0...M]
-GENES_NUMBER = SOLUTION*2 # (x,y) sequence, 2 by 2
-OPTIONS = {"dimension": DIMENSION,
-           "IndividualClass": Individual}
 
-generations1, total_score1, success1=report(SOLUTION,GENES_CHOICES,GENES_NUMBER,SCORE_FUNCTION,20,MUTATION_RATE,NUMBER_OF_GENERATIONS,OPTIONS)
+# Probar distintas soluciones simultáneamente y graficar los score y aciertos para ellas
 
-SOLUTION = 20 # N queens
-DIMENSION = 20 # MxM board
-GENES_CHOICES = list(range(DIMENSION)) # [0...M]
-GENES_NUMBER = SOLUTION*2 # (x,y) sequence, 2 by 2
-OPTIONS = {"dimension": DIMENSION,
-           "IndividualClass": Individual}
+# from GeneticAlgorithm import report
+# import matplotlib.pyplot as plt
 
-generations2, total_score2, success2=report(SOLUTION,GENES_CHOICES,GENES_NUMBER,SCORE_FUNCTION,50,MUTATION_RATE,NUMBER_OF_GENERATIONS,OPTIONS)
+# SOLUTION = 5 # N queens
+# DIMENSION = 5 # MxM board
+# GENES_CHOICES = list(range(DIMENSION)) # [0...M]
+# GENES_NUMBER = SOLUTION*2 # (x,y) sequence, 2 by 2
+# OPTIONS = {"dimension": DIMENSION,
+#            "IndividualClass": Individual}
 
-SOLUTION = 100 # N queens
-DIMENSION = 100 # MxM board
-GENES_CHOICES = list(range(DIMENSION)) # [0...M]
-GENES_NUMBER = SOLUTION*2 # (x,y) sequence, 2 by 2
-OPTIONS = {"dimension": DIMENSION,
-           "IndividualClass": Individual}
+# generations1, total_score1, success1=report(SOLUTION,GENES_CHOICES,GENES_NUMBER,SCORE_FUNCTION,20,MUTATION_RATE,NUMBER_OF_GENERATIONS,OPTIONS)
 
-generations3, total_score3, success3=report(SOLUTION,GENES_CHOICES,GENES_NUMBER,SCORE_FUNCTION,75,MUTATION_RATE,NUMBER_OF_GENERATIONS,OPTIONS)
+# SOLUTION = 8 # N queens
+# DIMENSION = 8 # MxM board
+# GENES_CHOICES = list(range(DIMENSION)) # [0...M]
+# GENES_NUMBER = SOLUTION*2 # (x,y) sequence, 2 by 2
+# OPTIONS = {"dimension": DIMENSION,
+#            "IndividualClass": Individual}
 
-SOLUTION = 70 # N queens
-DIMENSION = 100 # MxM board
-GENES_CHOICES = list(range(DIMENSION)) # [0...M]
-GENES_NUMBER = SOLUTION*2 # (x,y) sequence, 2 by 2
-OPTIONS = {"dimension": DIMENSION,
-           "IndividualClass": Individual}
-generations4, total_score4, success4=report(SOLUTION,GENES_CHOICES,GENES_NUMBER,SCORE_FUNCTION,100,MUTATION_RATE,NUMBER_OF_GENERATIONS,OPTIONS)
+# generations2, total_score2, success2=report(SOLUTION,GENES_CHOICES,GENES_NUMBER,SCORE_FUNCTION,50,MUTATION_RATE,NUMBER_OF_GENERATIONS,OPTIONS)
 
-f1 = plt.figure(1)
-ax1 = f1.add_subplot(111)
-ax1.set_title("Score total poblacional (Mutation rate: %s%%)" % (MUTATION_RATE*100))
-ax1.set_xlabel("# Generación")
-ax1.set_ylabel("% Score total poblacional")
-ax1.plot(generations1,total_score1, color="blue", label="8 reinas en 8x8")
-ax1.plot(generations2,total_score2, color="red", label="20 reinas en 20x20")
-ax1.plot(generations3,total_score3, color='g', label="100 reinas en 100x100")
-ax1.plot(generations4,total_score4, color='y', label="70 reinas en 100x100")
-plt.legend()
-plt.grid()
-plt.yticks(range(0, 101, 20))
-f1.show()
+# SOLUTION = 4 # N queens
+# DIMENSION = 8 # MxM board
+# GENES_CHOICES = list(range(DIMENSION)) # [0...M]
+# GENES_NUMBER = SOLUTION*2 # (x,y) sequence, 2 by 2
+# OPTIONS = {"dimension": DIMENSION,
+#            "IndividualClass": Individual}
+# generations3, total_score3, success3=report(SOLUTION,GENES_CHOICES,GENES_NUMBER,SCORE_FUNCTION,100,MUTATION_RATE,NUMBER_OF_GENERATIONS,OPTIONS)
 
-f2 = plt.figure(2)
-ax2 = f2.add_subplot(111)
-ax2.set_title("Aciertos por generación (Mutation rate: %s%%)" % (MUTATION_RATE*100))
-ax2.set_xlabel("# Generación")
-ax2.set_ylabel("% Aciertos")
-ax2.plot(generations1,success1, color="blue", label="8 reinas en 8x8")
-ax2.plot(generations2,success2, color="red", label="20 reinas en 20x20")
-ax2.plot(generations3,success3, color='g', label="100 reinas en 100x100")
-ax2.plot(generations4,success4, color='y', label="70 reinas en 100x100")
-plt.legend()
-plt.grid()
-plt.yticks(range(0, 101, 20))
-f2.show()
+# f1 = plt.figure(1)
+# ax1 = f1.add_subplot(111)
+# ax1.set_title("Score total poblacional (Mutation rate: %s%%)" % (MUTATION_RATE*100))
+# ax1.set_xlabel("# Generación")
+# ax1.set_ylabel("% Score total poblacional")
+# ax1.plot(generations1,total_score1, color="blue", label="5 reinas en 8x8")
+# ax1.plot(generations2,total_score2, color="red", label="20 reinas en 20x20")
+# ax1.plot(generations3,total_score3, color='g', label="100 reinas en 100x100")
+# plt.legend()
+# plt.grid()
+# plt.yticks(range(0, 101, 20))
+# f1.show()
 
-plt.show()
-plt.close()
+# f2 = plt.figure(2)
+# ax2 = f2.add_subplot(111)
+# ax2.set_title("Aciertos por generación (Mutation rate: %s%%)" % (MUTATION_RATE*100))
+# ax2.set_xlabel("# Generación")
+# ax2.set_ylabel("% Aciertos")
+# ax2.plot(generations1,success1, color="blue", label="5 reinas en 5x5")
+# ax2.plot(generations2,success2, color="red", label="8 reinas en 8x8")
+# ax2.plot(generations3,success3, color='g', label="4 reinas en 8x8")
+# plt.legend()
+# plt.grid()
+# plt.yticks(range(0, 101, 20))
+# f2.show()
+
+# plt.show()
+# plt.close()

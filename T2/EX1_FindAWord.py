@@ -19,16 +19,24 @@ SOLUTION = list("lorem")
 GENES_CHOICES = list("abcdefghijklmnopqrstuvwxyz., ")
 GENES_NUMBER = len(SOLUTION)
 SCORE_FUNCTION = WORD_FITNESS
+OPTIONS = {}
 
 POPULATION_NUMBER = 75
 MUTATION_RATE = 0.25
 NUMBER_OF_GENERATIONS = 100
 
 ###########################################ESTUDIO DE HIPERPARAMETROS#########################################
-ReportUtils.main(SOLUTION, GENES_CHOICES, GENES_NUMBER, SCORE_FUNCTION, POPULATION_NUMBER, MUTATION_RATE, NUMBER_OF_GENERATIONS)
+
+# Probar el algoritmo con los parámetros dados / 1 reporte
+report(SOLUTION, GENES_CHOICES, GENES_NUMBER, SCORE_FUNCTION, POPULATION_NUMBER, MUTATION_RATE, NUMBER_OF_GENERATIONS, OPTIONS)
+
+# Probar el algoritmo con los parámetros dados y combinaciones de otros / 7 reportes + gráficos
+# ReportUtils.main(SOLUTION, GENES_CHOICES, GENES_NUMBER, SCORE_FUNCTION, POPULATION_NUMBER, MUTATION_RATE, NUMBER_OF_GENERATIONS)
 
 ###########################################ESTUDIO DE DISTINTOS VALORES PARA EL PROBLEMA#########################################
-# from GeneticAlgorithm import report
+
+# Probar distintas soluciones simultáneamente y graficar los score y aciertos para ellas
+
 # import matplotlib.pyplot as plt
 
 # SOLUTION = list("car")
