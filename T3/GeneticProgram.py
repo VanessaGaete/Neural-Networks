@@ -7,10 +7,10 @@ class AbstractNode(ABC):
         self.left = left
         self.right = right
 
-    @abstractmethod
     def eval(self):
         "Evaluates the value of this Node."
-    
+        return eval(self.toString())
+
     @abstractmethod
     def copy(self):
         "Returns a deepcopy of this Node."
@@ -18,8 +18,8 @@ class AbstractNode(ABC):
     @property
     def nodes(self) -> int:
         return  1 + \
-                self.left.height if self.left else 0 + \
-                self.right.height if self.right else 0
+                (self.left.nodes if self.left else 0) + \
+                (self.right.nodes if self.right else 0)
 
     def toString(self) -> str:
         "Returns a string of this Node."
@@ -33,18 +33,27 @@ class AbstractNode(ABC):
         string += self.right.toString()
         string += " )"
 
-        return string        
-    
+        return string
+
     def show(self) -> None:
         "Prints on console this Node."
         print(self.toString())
+    
+    def nodesList(self, lista=[]) -> list:
+        lista += [self]
+        if self.left:
+            self.left.nodesList(lista)
+        if self.right:
+            self.right.nodesList(lista)
+        return lista
+
+    #def replace(self, index, tree):
+        #if 
+
 
 class Number(AbstractNode):
     def __init__(self, value):
         super().__init__(value, None, None)
-    
-    def eval(self):
-        return self.value
 
     def toString(self) -> str:
         if self.value < 0:
@@ -59,9 +68,6 @@ class Add(AbstractNode):
     def __init__(self, left:AbstractNode, right:AbstractNode):
         super().__init__('+',left, right)
 
-    def eval(self):
-        return self.left.eval() + self.right.eval()
-
     def copy(self):
         return Add(
             self.left.copy(),
@@ -71,9 +77,6 @@ class Add(AbstractNode):
 class Mult(AbstractNode):
     def __init__(self,left:AbstractNode, right:AbstractNode):
         super().__init__('*',left, right)
-
-    def eval(self):
-        return self.left.eval() * self.right.eval()
     
     def copy(self):
         return Mult(
@@ -85,11 +88,17 @@ class Div(AbstractNode):
     def __init__(self,left:AbstractNode, right:AbstractNode):
         super().__init__('/',left, right)
         
-    def eval(self):
-        return self.left.eval() / self.right.eval()
-        
     def copy(self):
         return Div(
             self.left.copy(),
             self.right.copy()
         )
+
+if __name__ == "__main__":
+    number_a = Number(44)
+    number_b = Number(-4)
+    number_c = Number(0)
+    number_d = Number(40)
+    node = Div(number_a, Add(number_b, Mult(number_d, number_c)))
+    node.show()
+    print(node.nodesList())

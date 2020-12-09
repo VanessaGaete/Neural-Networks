@@ -133,12 +133,16 @@ class TestProperties(unittest.TestCase):
         self.number_b = Number(-4)
         self.number_c = Number(0)
         self.number_d = Number(40)
-        node = Div(self.number_a, Add(self.number_b, Mult(self.number_d, self.number_c)))
+        self.node = Div(self.number_a, Add(self.number_b, Mult(self.number_d, self.number_c)))
 
     def test_nodes(self):
         self.assertEqual(self.number_a.nodes, 1)
         self.assertEqual(Add(self.number_a, self.number_b).nodes, 3)
-        self.assertEqual(self.node.nodes, 4)
+        self.assertEqual(self.node.nodes, 7)
+
+    def test_nodesList(self):
+        self.assertEqual(len(self.node.nodesList()), 7)
+
 
 if __name__ == "__main__":
     unittest.main()
