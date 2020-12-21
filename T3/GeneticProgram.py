@@ -7,9 +7,16 @@ class AbstractNode(ABC):
         self.left = left
         self.right = right
 
-    def eval(self):
+        self.father = None
+
+        if self.left:
+            self.left.father = self
+        if self.right:
+            self.right.father = self
+
+    def eval(self, value=None):
         "Evaluates the value of this Node."
-        return eval(self.toString())
+        return eval(self.toString(value))
 
     @abstractmethod
     def copy(self):
@@ -20,17 +27,21 @@ class AbstractNode(ABC):
         return  1 + \
                 (self.left.nodes if self.left else 0) + \
                 (self.right.nodes if self.right else 0)
+    
+    @property
+    def depth(self) -> int:
+        return  1 + (self.father.depth if self.father else -1)
 
-    def toString(self) -> str:
+    def toString(self, value=None) -> str:
         "Returns a string of this Node."
 
         string = ""
         string += "( "
-        string += self.left.toString()
+        string += self.left.toString(value)
         string += " "
         string += str(self.value)
         string += " "
-        string += self.right.toString()
+        string += self.right.toString(value)
         string += " )"
 
         return string
@@ -39,7 +50,10 @@ class AbstractNode(ABC):
         "Prints on console this Node."
         print(self.toString())
     
-    def nodesList(self, lista=[]) -> list:
+    def nodesList(self, lista=None) -> list:
+        if lista == None:
+            lista = list()
+            
         lista += [self]
         if self.left:
             self.left.nodesList(lista)
@@ -47,22 +61,46 @@ class AbstractNode(ABC):
             self.right.nodesList(lista)
         return lista
 
-    #def replace(self, index, tree):
-        #if 
+    def replace(self, index, tree):
+        if index == 0:
+            raise ValueError
+        
+        nodes_list = self.nodesList()
+        self_tree = nodes_list[index]
+
+        if (self_tree==self_tree.father.left):
+            self_tree.father.left = tree
+        else:
+            self_tree.father.right = tree
+
+        tree.father = self_tree.father
+        
+    def __repr__(self):
+        return "<<Node " + self.toString() + ">>"
 
 
 class Number(AbstractNode):
-    def __init__(self, value):
+    def __init__(self, value: int):
         super().__init__(value, None, None)
 
-    def toString(self) -> str:
-        if self.value < 0:
+    def toString(self, value=None) -> str:
+        if float(self.value) < 0:
             return "(" + str(self.value) + ")"
         else:
             return str(self.value)
 
     def copy(self):
         return Number(self.value)
+
+class X(Number):
+    def __init__(self):
+        super().__init__("X")
+    
+    def toString(self, value) -> str:
+        if self.value < 0:
+            return "(" + self.value if value else str(value) + ")"
+        else:
+            return str(value)
 
 class Add(AbstractNode):
     def __init__(self, left:AbstractNode, right:AbstractNode):
@@ -75,7 +113,7 @@ class Add(AbstractNode):
         )
 
 class Mult(AbstractNode):
-    def __init__(self,left:AbstractNode, right:AbstractNode):
+    def __init__(self, left:AbstractNode, right:AbstractNode):
         super().__init__('*',left, right)
     
     def copy(self):
@@ -90,6 +128,16 @@ class Div(AbstractNode):
         
     def copy(self):
         return Div(
+            self.left.copy(),
+            self.right.copy()
+        )
+
+class Subs(AbstractNode):
+    def __init__(self,left:AbstractNode, right:AbstractNode):
+        super().__init__('-',left, right)
+        
+    def copy(self):
+        return Subs(
             self.left.copy(),
             self.right.copy()
         )

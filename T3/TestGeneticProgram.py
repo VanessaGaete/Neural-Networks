@@ -135,6 +135,10 @@ class TestProperties(unittest.TestCase):
         self.number_d = Number(40)
         self.node = Div(self.number_a, Add(self.number_b, Mult(self.number_d, self.number_c)))
 
+        self.number_x = Number(44)
+        self.number_z = Number(-4)
+        self.node2 = Add(self.number_x, self.number_z)
+
     def test_nodes(self):
         self.assertEqual(self.number_a.nodes, 1)
         self.assertEqual(Add(self.number_a, self.number_b).nodes, 3)
@@ -143,6 +147,38 @@ class TestProperties(unittest.TestCase):
     def test_nodesList(self):
         self.assertEqual(len(self.node.nodesList()), 7)
 
+    def test_depth(self):
+        self.assertEqual(self.number_a.depth, 1)
+        self.assertEqual(self.node.depth, 0)
+        self.assertEqual(self.node.right.right.depth, 2)
+        self.assertEqual(self.number_c.depth, 3)
+
+        self.assertEqual(self.node2, self.number_x.father)
+        self.assertEqual(self.node2, self.number_z.father)
+        self.assertEqual(self.node2.left.depth, 1)
+        
+
+class TestReplace(unittest.TestCase):
+    def setUp(self):
+        self.number_a = Number(44)
+        self.number_b = Number(-4)
+        self.number_c = Number(0)
+        self.number_d = Number(40)
+        self.node1 = Add(self.number_a, self.number_b)
+        self.node = Div(self.number_a, Add(self.number_b, Mult(self.number_d, self.number_c)))
+    
+    def test_big_replace(self):
+        self.assertEqual(len(self.node.nodesList()), 7)
+        original=self.node
+        self.node.replace(2,self.node1)
+        
+        self.assertEqual(self.node.value, original.value)
+        self.assertEqual(self.node.left, original.left)
+        self.assertEqual(self.node.right.value, self.node1.value)
+        self.assertEqual(self.node.right.left, self.node1.left)
+        self.assertEqual(self.node.right.right, self.node1.right)
+
+        self.assertEqual(len(self.node.nodesList()), 5)
 
 if __name__ == "__main__":
     unittest.main()
