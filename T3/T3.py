@@ -22,50 +22,52 @@ class Algorithm:
         self.population_fitness = []
 
         self.history = []
-        self.generationNumber = 1
+        self.generationNumber = 0
         self.sol_gen = -1
+        self.a_solution = None
 
         # First steps
         self.generate_population()
-        self.population_fitness_DCDL()
+        self.calculate_population_fitness()
         self.checkSolutionExists()
     
     def Random_Generator(self, number_set, depth) -> AbstractNode:
-        if number_set==[]:
-            n1=random.uniform(-5,5)
-        else:
+        if number_set:
             n1 = random.choice(number_set)
+        else:
+            n1 = random.uniform(-5,5)
         
-        if depth == 0:
+        if depth < 0:
             return Number(n1)
         else:
             Node_ = random.choice(self.node_set)
             
             if Node_ == Number:
                 return Node_(n1)
+            elif Node_ == X:
+                return Node_()
             else:
                 return Node_(self.Random_Generator(number_set, depth-1), self.Random_Generator(number_set, depth-1))
     
-    def checkSolutionExists(self):
+    def checkSolutionExists(self) -> None:
         # Checks if some individual is the solution of the problem, compairing its score with the success_value.
-        exists = (self.target in self.population_fitness and self.sol_gen == -1)
-        if exists:
+        if (self.sol_gen == -1 and 1 in self.population_fitness):
             self.sol_gen = self.generationNumber
-        return exists
+            self.a_solution = self.population[self.population_fitness.index(1)]
 
-    def generate_population(self):
+    def generate_population(self) -> None:
         for _ in range(self.population_number):
             individual = self.Random_Generator(self.number_set, self.depth)
             self.population.append(individual)
         self.append_to_history() # This records the fitness of the first generation
 
-    def population_fitness_DCDL(self):
+    def calculate_population_fitness(self) -> None:
         self.population_fitness = []
         for i in range(self.population_number):
             individual = self.population[i]
             self.population_fitness.append(self.fitness_function(individual, self.target))
             
-    def crossover(self, father1, father2):
+    def crossover(self, father1: AbstractNode, father2: AbstractNode) -> AbstractNode:
         new_tree=father1.copy()
         father1_list=father1.nodesList()
         father2_list=father2.nodesList()
@@ -81,7 +83,7 @@ class Algorithm:
 
         return new_tree
 
-    def mutation(self, individual):
+    def mutation(self, individual) -> AbstractNode:
         p = random.random()
         
         if (p < self.mutation_rate):
@@ -95,18 +97,17 @@ class Algorithm:
                 return random_subtree
             
             individual.replace(mut_point, random_subtree)
-            return individual
+        return individual
         
-    def selectIndividual(self):
+    def selectIndividual(self) -> AbstractNode:
         # Roulette Wheel selection
-        self.population_fitness_DCDL()
-        s=int(sum(self.population_fitness))
-        r=random.randint(0,s)
+        s = sum(self.population_fitness)
+        r = random.uniform(0,s)
 
         s=0
         for f, individual in zip(self.population_fitness, self.population):
             s+=f
-            if (s>r):
+            if (s>=r):
                 return individual
 
     def step(self) -> None:
@@ -119,7 +120,7 @@ class Algorithm:
         
         # Sets the new generation, calculates their fitness and adds 1 to generatino number.
         self.population = new_generation
-        self.population_fitness_DCDL()
+        self.calculate_population_fitness()
         self.generationNumber += 1
         
         # Checks if this new generation was the first one that found the solution.
@@ -148,8 +149,7 @@ class Algorithm:
     def showSolution(self):
         # Prints the first ocurrence of the individual that is considered as a solution.
         try:
-            elementIndex = self.population_fitness.index(1)
-            print(self.population[elementIndex])
+            print(self.a_solution)
         except ValueError:
             print("No existe solución en esta generación.")
 
@@ -167,7 +167,7 @@ class Algorithm:
         
 def individual_fitness_DCDL(individual, target):
     try:
-        i_value=individual.eval()
+        i_value = individual.eval()
     except ZeroDivisionError:
         return 0
 
@@ -183,15 +183,18 @@ def individual_fitness_functions(individual, points_list):
         score += 1 / (abs(y-i_value) + 1)
     return score
 
-TARGET = 5
-NUMBER_SET = [1,2,3,4]
+TARGET = 10 # Ejercicio 1
 NODE_SET = [Add, Mult, Div, Subs, Number] # Ejercicio 1
-#NODE_SET = [Add, Mult, Div, Subs, Number, X] # Ejercicio 2
 
-POPULATION_NUMBER = 100
+# TARGET = ((3,4), (6,2), (7,5),) # Ejercicio 2
+# NODE_SET = [Add, Mult, Div, Subs, Number, X] # Ejercicio 2
+
+NUMBER_SET = [0,1,2,3,4,5,6,7]
+
+POPULATION_NUMBER = 20
 INDIVIDUAL_DEPTH = 3
 
-NUMBER_OF_GENERATIONS = 100
+NUMBER_OF_GENERATIONS = 50
 MUTATION_RATE = 0.25
 
 if __name__ == "__main__":
