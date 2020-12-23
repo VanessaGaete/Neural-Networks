@@ -219,3 +219,34 @@ if __name__ == "__main__":
     dcdl.showSolution()
     print("--------------")
     
+def report(TARGET, NUMBER_SET, NODE_SET, INDIVIDUAL_DEPTH,FITNESS_FUNCTION, POPULATION_NUMBER, MUTATION_RATE, NUMBER_OF_GENERATIONS):
+    # Prints in console a report of the genetic algorithm after the last generation.
+    # Also returns the GA statistics.
+
+    pa = Algorithm(target=TARGET,
+                    number_set=NUMBER_SET, 
+                    node_set= NODE_SET, 
+                    population_number= POPULATION_NUMBER, 
+                    individual_depth= INDIVIDUAL_DEPTH, 
+                    number_of_generations=NUMBER_OF_GENERATIONS,
+                    mutation_rate=MUTATION_RATE, 
+                    fitness_function=FITNESS_FUNCTION)
+
+    for _ in range(number_of_generations):
+        pa.step()
+    
+    print("\n--- REPORT ---")
+    print("Input as solution:", solution)
+    print("Individuals per generation:", population_number)
+    print("Generations passed:", number_of_generations)
+    print("Mutation rate:", mutation_rate)
+    print("Solution found after:", ga.sol_gen, "generations")
+    print("Other options:", options)
+    print("Any valid solution:")
+    pa.showSolution()
+    print("--------------")
+    
+    return pa.stadistics()
+
+###GENERA UN REPORTE DE COMPARACION PARA DISTINTOS HIPERPARAMETROS###########
+ReportUtils.main(TARGET, NUMBER_SET, NODE_SET, INDIVIDUAL_DEPTH,FITNESS_FUNCTION, POPULATION_NUMBER, MUTATION_RATE, NUMBER_OF_GENERATIONS)
