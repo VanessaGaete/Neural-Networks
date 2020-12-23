@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
-from T3 import report
+from GeneticProgram import report
 
 def main(TARGET, NUMBER_SET, NODE_SET, INDIVIDUAL_DEPTH,FITNESS_FUNCTION, POPULATION_NUMBER, MUTATION_RATE, NUMBER_OF_GENERATIONS):
     ##GRAFICOS VARIANDO EL MUTATION RATE
@@ -61,7 +61,7 @@ def main(TARGET, NUMBER_SET, NODE_SET, INDIVIDUAL_DEPTH,FITNESS_FUNCTION, POPULA
     ax2.set_ylabel("% Aciertos")
     ax2.plot(generations1,success1, color="blue", label="20 individuos")
     ax2.plot(generations2,success2, color="red", label="50 individuos")
-    ax2.plot(generations3,success3, color='g', label="75 individuos")s
+    ax2.plot(generations3,success3, color='g', label="75 individuos")
     plt.legend()
     plt.grid()
     plt.yticks(range(0, 101, 20))

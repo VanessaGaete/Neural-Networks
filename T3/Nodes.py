@@ -104,6 +104,9 @@ class X(Number):
         else:
             return str(value)
 
+    def copy(self):
+        return X()
+
 class Add(AbstractNode):
     def __init__(self, left:AbstractNode, right:AbstractNode):
         super().__init__('+',left, right)

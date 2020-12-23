@@ -175,33 +175,3 @@ class GA(object):
             TOTAL_SCORES.append(i[1])
             SUCCESS.append(i[2])
         return GENERATIONS, TOTAL_SCORES, SUCCESS
-
-
-def report(solution, genes_choices, genes_number, score_function,
-    population_number, mutation_rate, number_of_generations, options={}):
-    # Prints in console a report of the genetic algorithm after the last generation.
-    # Also returns the GA statistics.
-
-    ga = GA(population_number=population_number,
-            genes_choices=genes_choices,
-            solution=solution,
-            genes_number=genes_number,
-            scoreCalculatorFunction=score_function,
-            mutation_rate=mutation_rate,
-            options=options)
-
-    for _ in range(number_of_generations):
-        ga.step()
-    
-    print("\n--- REPORT ---")
-    print("Input as solution:", solution)
-    print("Individuals per generation:", population_number)
-    print("Generations passed:", number_of_generations)
-    print("Mutation rate:", mutation_rate)
-    print("Solution found after:", ga.sol_gen, "generations")
-    print("Other options:", options)
-    print("Any valid solution:")
-    ga.showSolution()
-    print("--------------")
-    
-    return ga.stadistics()
