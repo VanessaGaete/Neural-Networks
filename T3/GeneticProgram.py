@@ -96,9 +96,11 @@ class X(Number):
     def __init__(self):
         super().__init__("X")
     
-    def toString(self, value) -> str:
-        if self.value < 0:
-            return "(" + self.value if value else str(value) + ")"
+    def toString(self, value="X") -> str:
+        if value == "X" or value == None:
+            return "X"
+        if value < 0:
+            return "(" + value if value else str(value) + ")"
         else:
             return str(value)
 
