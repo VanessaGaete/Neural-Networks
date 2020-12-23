@@ -27,6 +27,8 @@ class GeneticProgram:
         self.checkSolutionExists()
     
     def Random_Generator(self, number_set, depth) -> AbstractNode:
+        #Generates an individual with maximum depth "depth" where each of its nodes is randomly chosen from 
+        # the set of possible nodes "self.node_set" and the numbers from "number_set"
         if number_set:
             n1 = random.choice(number_set)
         else:
@@ -51,17 +53,21 @@ class GeneticProgram:
             self.a_solution = self.population[self.population_fitness.index(1)]
 
     def generate_population(self) -> None:
+        #Creates a population of population_number randomly generated individuals
         for _ in range(self.population_number):
             individual = self.Random_Generator(self.number_set, self.depth)
             self.population.append(individual)
 
     def calculate_population_fitness(self) -> None:
+        #Calculate fitness for each individual in the population
         self.population_fitness = []
         for i in range(self.population_number):
             individual = self.population[i]
             self.population_fitness.append(self.fitness_function(individual, self.target))
             
     def crossover(self, father1: AbstractNode, father2: AbstractNode) -> AbstractNode:
+        #Make a crossover between "father1" and "father2". 
+        #For this, a random node in "father1" is chosen and replaced by a random node in "father2"
         new_tree=father1.copy()
         father1_list=father1.nodesList()
         father2_list=father2.nodesList()
@@ -78,6 +84,8 @@ class GeneticProgram:
         return new_tree
 
     def mutation(self, individual) -> AbstractNode:
+        #The individual mutates with some probability. 
+        #If the individual mutates, a random node is replaced by a new randomly generated node.
         p = random.random()
         
         if (p < self.mutation_rate):

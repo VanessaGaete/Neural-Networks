@@ -5,6 +5,7 @@ import ReportUtils
 from Nodes import *
         
 def individual_fitness_DCDL(individual, target):
+    #The fitness function for Des chiffres et des lettres problem.
     try:
         i_value = individual.eval()
     except ZeroDivisionError:
@@ -14,6 +15,7 @@ def individual_fitness_DCDL(individual, target):
     return score
 
 def individual_fitness_functions(individual, points_list):
+    #The fitness function for the problem of finding an equation that fits three points.
     score=0
     for point in points_list:
         x = point[0]

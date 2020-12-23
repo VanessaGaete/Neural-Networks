@@ -24,12 +24,14 @@ class AbstractNode(ABC):
 
     @property
     def nodes(self) -> int:
+        "Returns the amount of nodes in the three"
         return  1 + \
                 (self.left.nodes if self.left else 0) + \
                 (self.right.nodes if self.right else 0)
     
     @property
     def depth(self) -> int:
+        "Returns the depth of this Node"
         return  1 + (self.father.depth if self.father else -1)
 
     def toString(self, value=None) -> str:
@@ -51,6 +53,7 @@ class AbstractNode(ABC):
         print(self.toString())
     
     def nodesList(self, lista=None) -> list:
+        "Returns a list of the tree that represents the current node"
         if lista == None:
             lista = list()
             
@@ -62,6 +65,7 @@ class AbstractNode(ABC):
         return lista
 
     def replace(self, index, tree):
+        "Replace the subnode in the index position with tree"
         if index == 0:
             raise ValueError
         
