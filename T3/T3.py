@@ -1,11 +1,6 @@
 import random
 
-from GeneticAlgorithm import AbstractIndividual
-from GeneticProgram import *
-
-class Individual(AbstractIndividual):
-    def __init__(self, genes_number: int, chromosome: list):
-        super().__init__(genes_number, chromosome)
+from Nodes import *
 
 class Algorithm:
     def __init__(self, target: int, number_set: list, node_set: list, population_number: int, individual_depth: int, number_of_generations: int, mutation_rate: float, fitness_function):

@@ -1,6 +1,6 @@
 import unittest
 
-from GeneticProgram import *
+from Nodes import *
 
 class TestNumberNode(unittest.TestCase):
     def test_number(self):
@@ -38,6 +38,13 @@ class TestSimpleOperationNodes(unittest.TestCase):
         self.assertEqual(div.left, self.number_a)
         self.assertEqual(div.right, self.number_b)
         self.assertEqual(div.eval(), 42 / (-4))
+
+    def test_subs(self):
+        subs = Subs(self.number_a, self.number_b)
+
+        self.assertEqual(subs.left, self.number_a)
+        self.assertEqual(subs.right, self.number_b)
+        self.assertEqual(subs.eval(), 42 - (-4))
 
 class TestComplexOperationNodes(unittest.TestCase):
     def setUp(self):
