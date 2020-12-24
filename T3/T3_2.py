@@ -3,16 +3,6 @@ import random
 from GeneticProgram import GeneticProgram
 import ReportUtils
 from Nodes import *
-        
-def individual_fitness_DCDL(individual, target):
-    #The fitness function for Des chiffres et des lettres problem.
-    try:
-        i_value = individual.eval()
-    except ZeroDivisionError:
-        return 0
-
-    score = 1 / (abs(target-i_value) + 1)
-    return score
 
 def individual_fitness_functions(individual, points_list):
     #The fitness function for the problem of finding an equation that fits three points.
@@ -27,21 +17,11 @@ def individual_fitness_functions(individual, points_list):
             score += 0
     return score / len(points_list)
 
-# Descomentar para el ejercicio 1
-
-TARGET = 10                                   # Ejercicio 1
-NODE_SET = [Add, Mult, Div, Subs, Number]     # Ejercicio 1
-FITNESS_FUNCTION = individual_fitness_DCDL    # Ejercicio 1
-
-# Descomentar para el ejercicio 2
-
-# TARGET = ((1,1), (2,2), (3,3),)                 # Ejercicio 2 / X
-# TARGET = ((1,2), (2,4), (3,6),)                 # Ejercicio 2 / 2*X
-# TARGET = ((1,1), (2,4), (3,9),(4,16))           # Ejercicio 2 / X^2
-# NODE_SET = [Add, Mult, Div, Subs, Number, X]    # Ejercicio 2
-# FITNESS_FUNCTION = individual_fitness_functions # Ejercicio 2
-
-
+TARGET = ((1,1), (2,4), (3,9), (4,16))            # Función: X^2
+# TARGET = ((1,2), (2,4), (3,6),)                 # Función: 2*X
+# TARGET = ((1,1), (2,2), (3,3),)                 # Función: X
+NODE_SET = [Add, Mult, Div, Subs, Number, X]
+FITNESS_FUNCTION = individual_fitness_functions
 
 NUMBER_SET = [0,1,2,3,4,5,6,7]
 
